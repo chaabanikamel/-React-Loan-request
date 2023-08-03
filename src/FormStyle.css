@@ -54,3 +54,7 @@ hr{
   color:green;
   
 }
+.disabled{
+  background: gray!important;
+  
+}
