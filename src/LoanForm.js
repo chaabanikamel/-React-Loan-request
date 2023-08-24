@@ -1,9 +1,11 @@
 import React from "react";
 import "./FormStyle.css";
-// import Modal from "./Modal";
+import Modal from "./Modal";
 import { useState } from "react";
 
 function LoanForm() {
+  const [errorMessage,setErrorMessage]=useState(null)
+  const [showModal, SetShowModal] = useState(false);
   const [loanInputs, setLoanInputs] = useState({
     name: "",
     phoneNumber: "",
@@ -11,18 +13,36 @@ function LoanForm() {
     isEmployee: false,
     salaryRange: "",
   });
+  function handleDivClick() {
+    console.log("dic clicked");
+    if (showModal) {
+      SetShowModal(false);
+    }
+  }
 
   function handleSubmit(event) {
     event.preventDefault();
-    alert("salem");
+    setErrorMessage(null)
+    const {age,phoneNumber}=loanInputs
+   if (age<18 || age>100){
+    setErrorMessage("the Age is Not allowed")
+   }else if(phoneNumber.length <8 ||phoneNumber.length>12){
+        setErrorMessage("phone Number format is Incorrect")
+   }
+    SetShowModal(true);
   }
-  const btnIsDisabled =   (loanInputs.name == "") ||
-  (loanInputs.age == "") ||
-  (loanInputs.phoneNumber == "")
 
+  const btnIsDisabled =
+    loanInputs.name == "" ||
+    loanInputs.age == "" ||
+    loanInputs.phoneNumber == "";
 
   return (
-    <div className="flex" style={{ flexDirection: "column" }}>
+    <div
+      onClick={handleDivClick}
+      className="flex"
+      style={{ flexDirection: "column" }}
+    >
       <form className="flex" style={{ flexDirection: "column" }} id="loan-form">
         <h1>Requesting a loan</h1>
         <hr />
@@ -67,16 +87,15 @@ function LoanForm() {
           <option>Above 2000$</option>
         </select>
         <button
-          id="submit-loan-btn" className={btnIsDisabled ? "disabled":""}
+          id="submit-loan-btn"
+          className={btnIsDisabled ? "disabled" : ""}
           onClick={handleSubmit}
-          disabled={
-            btnIsDisabled
-          }
+          disabled={btnIsDisabled}
         >
           Submit
         </button>
-        {/* <Modal/> */}
       </form>
+      <Modal isVisible={showModal} errorMessage={errorMessage} />
     </div>
   );
 }
